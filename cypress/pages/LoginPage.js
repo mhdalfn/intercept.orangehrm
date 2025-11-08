@@ -16,6 +16,20 @@ class LoginPage {
         return cy.get('.oxd-button')
     }
 
+    // ====== Tambahan: INTERCEPT METHODS ======
+    interceptDashboard() {
+        cy.intercept('GET', '**/api/v2/dashboard/employees/locations**').as('getLocations')
+    }
+
+    interceptLoginPage() {
+        cy.intercept('GET', '**/auth/login**').as('getLoginPage')
+    }
+
+    interceptMessages(aliasName = 'getMessages') {
+        cy.intercept('GET', '**/core/i18n/messages**').as(aliasName)
+    }
+
+    // ====== Aksi Login ======
     enterUsername(username) {
         if (username !== '') {
             this.getUsernameField().type(username)
