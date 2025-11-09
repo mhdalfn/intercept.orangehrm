@@ -1,9 +1,11 @@
 class LoginPage {
 
+    // ==== NAVIGATION ====
     visit() {
         cy.visit('https://opensource-demo.orangehrmlive.com')
     }
 
+    // ==== ELEMENTS ====
     getUsernameField() {
         return cy.get(':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input')
     }
@@ -16,7 +18,11 @@ class LoginPage {
         return cy.get('.oxd-button')
     }
 
-    // ====== Tambahan: INTERCEPT METHODS ======
+    getDashboardBreadcrumb() {
+        return cy.get('.oxd-topbar-header-breadcrumb > .oxd-text')
+    }
+
+    // ==== INTERCEPTS ====
     interceptDashboard() {
         cy.intercept('GET', '**/api/v2/dashboard/employees/locations**').as('getLocations')
     }
@@ -29,7 +35,7 @@ class LoginPage {
         cy.intercept('GET', '**/core/i18n/messages**').as(aliasName)
     }
 
-    // ====== Aksi Login ======
+    // ==== ACTIONS ====
     enterUsername(username) {
         if (username !== '') {
             this.getUsernameField().type(username)
@@ -51,6 +57,17 @@ class LoginPage {
         this.enterUsername(username)
         this.enterPassword(password)
         this.clickLoginButton()
+    }
+
+    // ==== ASSERTIONS ====
+    verifyDashboardPage() {
+        cy.url().should('contain', '/dashboard')
+        this.getDashboardBreadcrumb().should('be.visible')
+    }
+
+    verifyLoginPage() {
+        cy.url().should('include', '/login')
+        this.getLoginButton().should('be.visible')
     }
 }
 
